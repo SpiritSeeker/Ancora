@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Sandbox2D.h"
+#include "GameLayer.h"
 
 class ExampleLayer : public Ancora::Layer
 {
@@ -216,7 +216,7 @@ public:
 	Sandbox()
 	{
 		// PushLayer(new ExampleLayer());
-		PushLayer(new Sandbox2D());
+		PushLayer(new GameLayer());
 	}
 
 	~Sandbox()
