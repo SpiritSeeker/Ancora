@@ -25,10 +25,10 @@ namespace Ancora {
     s_Data->QuadVertexArray = VertexArray::Create();
 
     float vertices[] = {
-      -0.75f, -0.75f,  0.0f, 0.0f, 0.0f,
-       0.75f, -0.75f,  0.0f, 1.0f, 0.0f,
-       0.75f,  0.75f,  0.0f, 1.0f, 1.0f,
-      -0.75f,  0.75f,  0.0f, 0.0f, 1.0f
+      -1.0f, -1.0f,  0.0f, 0.0f, 0.0f,
+       1.0f, -1.0f,  0.0f, 1.0f, 0.0f,
+       1.0f,  1.0f,  0.0f, 1.0f, 1.0f,
+      -1.0f,  1.0f,  0.0f, 0.0f, 1.0f
     };
 
     Ref<VertexBuffer> vertexBuffer;

@@ -2,6 +2,8 @@
 
 #include <Ancora.h>
 
+#include "Snake.h"
+
 class GameLayer : public Ancora::Layer
 {
 public:
@@ -21,6 +23,9 @@ private:
   Ancora::Ref<Ancora::Shader> m_Shader;
 
   Ancora::Ref<Ancora::Texture2D> m_GrassTexture;
+
+  Snake* m_Snake;
+  Direction m_SnakeDirection;
 
   int m_FPS;
 };
