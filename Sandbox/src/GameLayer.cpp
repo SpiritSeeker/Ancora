@@ -14,6 +14,7 @@ void GameLayer::OnAttach()
 {
   m_GrassTexture = Ancora::Texture2D::Create("Sandbox/assets/textures/grass_tile.png");
   m_WoodTexture = Ancora::Texture2D::Create("Sandbox/assets/textures/wood_tile.png");
+  m_HeartTexture = Ancora::Texture2D::Create("Sandbox/assets/textures/heart.png");
   m_Snake = new Snake({ 0.0f, 0.0f }, 0.05f * m_Scale, 3);
   m_Fruit = new Fruit({ -0.5f * m_Scale, -0.5f * m_Scale }, 0.05f * m_Scale, 20, 20);
   m_SnakeDirection = m_Snake->GetDirection();
@@ -72,9 +73,9 @@ void GameLayer::OnUpdate(Ancora::Timestep ts)
   Ancora::RenderCommand::Clear();
 
   Ancora::Renderer2D::BeginScene(m_CameraController.GetCamera());
-  Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.2f }, { 1.0f, 1.0f }, m_WoodTexture);
-  Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { m_Scale, m_Scale }, m_GrassTexture);
-  Ancora::Renderer2D::DrawQuad(glm::vec3(m_Fruit->GetLocation() + m_Fruit->GetSize(), -0.05f), { m_Fruit->GetSize(), m_Fruit->GetSize() }, { 0.8f, 0.2f, 0.3f, 1.0f });
+  Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.2f }, { 1.0f, 1.0f }, m_WoodTexture, 20);
+  Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { m_Scale, m_Scale }, m_GrassTexture, 20);
+  Ancora::Renderer2D::DrawQuad(glm::vec3(m_Fruit->GetLocation() + m_Fruit->GetSize(), -0.05f), { m_Fruit->GetSize(), m_Fruit->GetSize() }, m_HeartTexture);
   for (auto& block : m_Snake->GetBlocks())
     Ancora::Renderer2D::DrawQuad({ block.Topleft.x + m_Snake->GetBlockSize(), block.Topleft.y - m_Snake->GetBlockSize() }, { m_Snake->GetBlockSize(), m_Snake->GetBlockSize() }, { 0.15f, 0.15f, 0.15f, 1.0f });
   Ancora::Renderer2D::EndScene();

@@ -25,6 +25,7 @@ private:
 
   Ancora::Ref<Ancora::Texture2D> m_GrassTexture;
   Ancora::Ref<Ancora::Texture2D> m_WoodTexture;
+  Ancora::Ref<Ancora::Texture2D> m_HeartTexture;
 
   Snake* m_Snake;
   Direction m_SnakeDirection;
