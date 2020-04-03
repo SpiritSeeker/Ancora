@@ -3,6 +3,7 @@
 #include <Ancora.h>
 
 #include "Snake.h"
+#include "Fruit.h"
 
 class GameLayer : public Ancora::Layer
 {
@@ -23,9 +24,15 @@ private:
   Ancora::Ref<Ancora::Shader> m_Shader;
 
   Ancora::Ref<Ancora::Texture2D> m_GrassTexture;
+  Ancora::Ref<Ancora::Texture2D> m_WoodTexture;
 
   Snake* m_Snake;
   Direction m_SnakeDirection;
+
+  Fruit* m_Fruit;
+
+  bool m_GameRunning;
+  float m_Scale = 0.95f;
 
   int m_FPS;
 };

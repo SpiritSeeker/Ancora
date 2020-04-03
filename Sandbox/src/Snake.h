@@ -1,12 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <queue>
 #include <glm/glm.hpp>
 
 struct Block
 {
   glm::vec2 Topleft;
-  float Size;
+  bool Movable = false;
+  std::queue<glm::vec2> History;
 };
 
 enum Direction
@@ -17,8 +19,8 @@ enum Direction
 class Snake
 {
 public:
-  Snake(const glm::vec2& topleft = glm::vec2(0.0f), float size = 0.1f, uint32_t length = 1);
-  ~Snake();
+  Snake(const glm::vec2& topleft = glm::vec2(0.0f), float size = 0.05f, uint32_t length = 1);
+  ~Snake() = default;
 
   void MoveLeft();
   void MoveRight();
@@ -26,8 +28,8 @@ public:
   void MoveDown();
 
   bool InsideBounds(const glm::vec2& topleft = glm::vec2({ -1.0f, 1.0f }), const glm::vec2& bottomright = glm::vec2({ 1.0f, -1.0f }));
-  bool CheckCollisionWithSelf();
-  bool CheckCollisionWithFruit(const glm::vec2& topleft, float size);
+  bool CollisionWithSelf();
+  bool CollisionWithFruit(const glm::vec2& fruit);
 
   bool AtTurnPoint();
 
@@ -35,6 +37,8 @@ public:
   void SetDirection(Direction direction) { m_Direction = direction; }
 
   const float GetSpeed() const { return m_MoveSpeed; }
+  const float GetBlockSize() const { return m_BlockSize; }
+  const uint32_t GetLength() const { return m_Length; }
 
   void Grow();
 

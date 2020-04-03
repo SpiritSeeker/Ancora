@@ -41,7 +41,7 @@ namespace Ancora {
   void OrthographicCameraController::OnEvent(Event& e)
   {
     EventDispatcher dispatcher(e);
-    dispatcher.Dispatch<MouseScrolledEvent>(AE_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
+    // dispatcher.Dispatch<MouseScrolledEvent>(AE_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
     dispatcher.Dispatch<WindowResizeEvent>(AE_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
   }
 
