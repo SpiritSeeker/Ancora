@@ -60,6 +60,7 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach()
 {
   m_Texture = Ancora::Texture2D::Create("Sandbox/assets/textures/pic.png");
+  Ancora::Random::Init();
 }
 
 void Sandbox2D::OnDetach()
@@ -98,7 +99,7 @@ void Sandbox2D::OnUpdate(Ancora::Timestep ts)
 void Sandbox2D::OnImGuiRender()
 {
   ImGui::Begin("Test");
-	ImGui::Text("FPS: %d", m_FPS);
+	ImGui::Text("FPS: %d, %f", m_FPS, Ancora::Random::Float());
 	ImGui::End();
 
 	ImGui::Begin("Settings");

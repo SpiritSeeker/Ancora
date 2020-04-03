@@ -7,6 +7,8 @@
 
 #include "Ancora/Core/Timestep.h"
 
+#include "Ancora/Core/Random.h"
+
 #include "Ancora/Core/Input.h"
 #include "Ancora/Core/KeyCodes.h"
 #include "Ancora/Core/MouseButtonCodes.h"
