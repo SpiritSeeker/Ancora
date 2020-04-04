@@ -217,7 +217,8 @@ public:
 	Sandbox()
 	{
 		// PushLayer(new ExampleLayer());
-		PushLayer(new ParticleLayer());
+		PushLayer(new Sandbox2D());
+		// PushLayer(new ParticleLayer());
 	}
 
 	~Sandbox()
