@@ -8,6 +8,17 @@
 
 namespace Ancora {
 
+  struct Bounds
+  {
+    float Top;
+    float Bottom;
+    float Left;
+    float Right;
+
+    float GetWidth() { return Right - Left; }
+    float GetHeight() { return Top - Bottom; }
+  };
+
   class OrthographicCameraController
   {
   public:
@@ -18,6 +29,7 @@ namespace Ancora {
 
     OrthographicCamera& GetCamera() { return m_Camera; }
     const OrthographicCamera& GetCamera() const { return m_Camera; }
+    Bounds& GetBounds() { return m_Bounds; }
   private:
     bool OnMouseScrolled(MouseScrolledEvent& e);
     bool OnWindowResized(WindowResizeEvent& e);
@@ -25,6 +37,8 @@ namespace Ancora {
     float m_AspectRatio;
     float m_ZoomLevel = 1.0f;
     OrthographicCamera m_Camera;
+
+    Bounds m_Bounds;
 
     bool m_Rotation;
     glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
