@@ -18,7 +18,7 @@ project "Glad"
 		"include"
 	}
 
-	filter "system:linux"
+	filter { "action:gmake*", "toolset:gcc" }
 		buildoptions { "-std=c11", "-fPIC" }
 
 	filter "system:windows"

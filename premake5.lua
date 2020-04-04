@@ -12,7 +12,8 @@ workspace "Ancora"
 	platforms
 	{
 		"linux",
-		"windows"
+		"windows",
+		"macosx"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -76,7 +77,7 @@ project "Ancora"
 		"ImGui"
 	}
 
-	filter "system:linux"
+	filter "system:linux or macosx"
 		kind "SharedLib"
 
 		defines
@@ -178,7 +179,7 @@ project "Sandbox"
 		"Ancora"
 	}
 
-	filter "system:linux"
+	filter "system:linux or macosx"
 
 		defines
 		{
