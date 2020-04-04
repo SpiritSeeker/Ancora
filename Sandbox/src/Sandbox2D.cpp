@@ -91,7 +91,7 @@ void Sandbox2D::OnUpdate(Ancora::Timestep ts)
   	Ancora::Renderer2D::BeginScene(m_CameraController.GetCamera());
     Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 2.0f, 2.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
     Ancora::Renderer2D::DrawRotatedQuad({ 1.0f, -0.5f }, glm::radians(30.0f), { 0.15f, 0.35f }, m_SquareColor);
-    // Ancora::Renderer2D::DrawQuad({ 0.5f, 0.5f }, { 0.5f, 0.5f }, m_Texture);
+    Ancora::Renderer2D::DrawQuad({ 0.5f, 0.5f }, { 0.5f, 0.5f }, m_Texture, 2, m_SquareColor);
     Ancora::Renderer2D::EndScene();
   }
 }
