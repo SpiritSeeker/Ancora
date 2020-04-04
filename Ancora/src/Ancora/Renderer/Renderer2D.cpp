@@ -11,7 +11,7 @@ namespace Ancora {
 
   struct QuadVertex
   {
-    glm::vec3 Position;
+    glm::vec4 Position;
     glm::vec4 Color;
     glm::vec2 TexCoord;
     int TexID;
@@ -41,7 +41,7 @@ namespace Ancora {
 
     s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
     BufferLayout layout = {
-      { ShaderDataType::Float3, "a_Position" },
+      { ShaderDataType::Float4, "a_Position" },
       { ShaderDataType::Float4, "a_Color" },
       { ShaderDataType::Float2, "a_TexCoord" },
       { ShaderDataType::Int,    "a_TexID" }
@@ -114,25 +114,25 @@ namespace Ancora {
 
   void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
   {
-    s_Data.QuadVertexBufferPtr->Position = { position.x - size.x / 2, position.y - size.y / 2, position.z };
+    s_Data.QuadVertexBufferPtr->Position = { position.x - size.x / 2, position.y - size.y / 2, position.z, 1.0f };
     s_Data.QuadVertexBufferPtr->Color = color;
     s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
     s_Data.QuadVertexBufferPtr->TexID = 0;
     s_Data.QuadVertexBufferPtr++;
 
-    s_Data.QuadVertexBufferPtr->Position = { position.x + size.x / 2, position.y - size.y / 2, position.z };
+    s_Data.QuadVertexBufferPtr->Position = { position.x + size.x / 2, position.y - size.y / 2, position.z, 1.0f };
     s_Data.QuadVertexBufferPtr->Color = color;
     s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
     s_Data.QuadVertexBufferPtr->TexID = 0;
     s_Data.QuadVertexBufferPtr++;
 
-    s_Data.QuadVertexBufferPtr->Position = { position.x + size.x / 2, position.y + size.y / 2, position.z };
+    s_Data.QuadVertexBufferPtr->Position = { position.x + size.x / 2, position.y + size.y / 2, position.z, 1.0f };
     s_Data.QuadVertexBufferPtr->Color = color;
     s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
     s_Data.QuadVertexBufferPtr->TexID = 0;
     s_Data.QuadVertexBufferPtr++;
 
-    s_Data.QuadVertexBufferPtr->Position = { position.x - size.x / 2, position.y + size.y / 2, position.z };
+    s_Data.QuadVertexBufferPtr->Position = { position.x - size.x / 2, position.y + size.y / 2, position.z, 1.0f };
     s_Data.QuadVertexBufferPtr->Color = color;
     s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
     s_Data.QuadVertexBufferPtr->TexID = 0;
@@ -174,16 +174,46 @@ namespace Ancora {
 
   void Renderer2D::DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec2& size, const glm::vec4& color)
   {
-    s_Data.TextureShader->SetInt("u_TilingFactor", 1);
-    s_Data.TextureShader->SetFloat4("u_Color", color);
-    s_Data.WhiteTexture->Bind();
-
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
       * glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
       * glm::scale(glm::mat4(1.0f), glm::vec3({ size.x, size.y, 1.0f }));
-    s_Data.TextureShader->SetMat4("u_Transform", transform);
 
-    RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
+    glm::vec4 transformedPosition = transform * glm::vec4({ -0.5f, 0.5, 0.0f, 1.0f });
+
+    s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4({ -0.5f, -0.5, 0.0f, 1.0f });
+    s_Data.QuadVertexBufferPtr->Color = color;
+    s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+    s_Data.QuadVertexBufferPtr->TexID = 0;
+    s_Data.QuadVertexBufferPtr++;
+
+    s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4({ 0.5f, -0.5, 0.0f, 1.0f });
+    s_Data.QuadVertexBufferPtr->Color = color;
+    s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+    s_Data.QuadVertexBufferPtr->TexID = 0;
+    s_Data.QuadVertexBufferPtr++;
+
+    s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4({ 0.5f, 0.5, 0.0f, 1.0f });
+    s_Data.QuadVertexBufferPtr->Color = color;
+    s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+    s_Data.QuadVertexBufferPtr->TexID = 0;
+    s_Data.QuadVertexBufferPtr++;
+
+    s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4({ -0.5f, 0.5, 0.0f, 1.0f });
+    s_Data.QuadVertexBufferPtr->Color = color;
+    s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+    s_Data.QuadVertexBufferPtr->TexID = 0;
+    s_Data.QuadVertexBufferPtr++;
+
+    s_Data.QuadIndexCount += 6;
+
+    // s_Data.TextureShader->SetInt("u_TilingFactor", 1);
+    // s_Data.TextureShader->SetFloat4("u_Color", color);
+    // s_Data.WhiteTexture->Bind();
+    //
+
+    // s_Data.TextureShader->SetMat4("u_Transform", transform);
+    //
+    // RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
   }
 
   void Renderer2D::DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const Ref<Texture2D>& texture, int tilingFactor, const glm::vec4& color)
