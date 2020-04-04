@@ -113,7 +113,7 @@ project "Ancora"
 
 		links
 		{
-			"libopengl32.lib"
+			"opengl32.lib"
 		}
 
 		files
