@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Sandbox2D.h"
+#include "Sandbox3D.h"
 
 class ExampleLayer : public Ancora::Layer
 {
@@ -216,7 +217,7 @@ public:
 	Sandbox()
 	{
 		// PushLayer(new ExampleLayer());
-		PushLayer(new Sandbox2D());
+		PushLayer(new Sandbox3D());
 	}
 
 	~Sandbox()

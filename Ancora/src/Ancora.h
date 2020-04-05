@@ -11,12 +11,14 @@
 #include "Ancora/Core/KeyCodes.h"
 #include "Ancora/Core/MouseButtonCodes.h"
 #include "Ancora/Renderer/OrthographicCameraController.h"
+#include "Ancora/Renderer/PerspectiveCameraController.h"
 
 #include "Ancora/ImGui/ImGuiLayer.h"
 
 // ------------------ Renderer ------------------
 #include "Ancora/Renderer/Renderer.h"
 #include "Ancora/Renderer/Renderer2D.h"
+#include "Ancora/Renderer/Renderer3D.h"
 #include "Ancora/Renderer/RenderCommand.h"
 
 #include "Ancora/Renderer/Buffer.h"
@@ -25,4 +27,5 @@
 #include "Ancora/Renderer/VertexArray.h"
 
 #include "Ancora/Renderer/OrthographicCamera.h"
+#include "Ancora/Renderer/PerspectiveCamera.h"
 // ----------------------------------------------
