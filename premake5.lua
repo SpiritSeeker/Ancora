@@ -170,7 +170,9 @@ project "Sandbox"
 		"Ancora/vendor/spdlog/include",
 		"Ancora/src",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	links

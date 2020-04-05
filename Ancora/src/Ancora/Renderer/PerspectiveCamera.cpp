@@ -23,18 +23,20 @@ namespace Ancora {
     m_Position = position;
     m_Center = center;
 
+    auto pos = m_Position - m_Center;
+
     if (glm::length(up) == 0)
     {
-      double magXZ = glm::sqrt(glm::pow(m_Position.x, 2) + glm::pow(m_Position.z, 2));
+      double magXZ = glm::sqrt(glm::pow(pos.x, 2) + glm::pow(pos.z, 2));
 
       if (magXZ == 0)
         m_Up.y = 0;
       else
       {
-        double mag = glm::length(m_Position);
-        m_Up.x = (-1 * m_Position.y * m_Position.x) / (magXZ * mag);
+        double mag = glm::length(pos);
+        m_Up.x = (-1 * pos.y * pos.x) / (magXZ * mag);
         m_Up.y = magXZ / mag;
-        m_Up.z = (-1 * m_Position.y * m_Position.z) / (magXZ * mag);
+        m_Up.z = (-1 * pos.y * pos.z) / (magXZ * mag);
       }
     }
     else

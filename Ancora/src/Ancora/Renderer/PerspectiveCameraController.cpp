@@ -7,7 +7,7 @@
 namespace Ancora {
 
   PerspectiveCameraController::PerspectiveCameraController(float fov, float aspect)
-    : m_FOV(fov), m_AspectRatio(aspect), m_Camera(m_FOV * m_ZoomLevel, m_AspectRatio, 1.0f, 50.0f)
+    : m_FOV(fov), m_AspectRatio(aspect), m_Camera(m_FOV * m_ZoomLevel, m_AspectRatio, 0.1f, 50.0f)
   {
   }
 
@@ -20,40 +20,40 @@ namespace Ancora {
     if (Input::IsKeyPressed(AE_KEY_W))
     {
       float upMag = glm::length(m_CameraUp);
-			m_CameraPosition.x += m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
-      m_CameraPosition.y += m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
-      m_CameraPosition.z += m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
+			m_CameraCenter.x += m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraCenter.y += m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraCenter.z += m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
     }
 
 		else if (Input::IsKeyPressed(AE_KEY_S))
     {
       float upMag = glm::length(m_CameraUp);
-    	m_CameraPosition.x -= m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
-      m_CameraPosition.y -= m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
-      m_CameraPosition.z -= m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
+    	m_CameraCenter.x -= m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraCenter.y -= m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraCenter.z -= m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
     }
 
 		if (Input::IsKeyPressed(AE_KEY_D))
     {
-      glm::vec3 left = glm::cross(m_CameraPosition, m_CameraUp);
+      glm::vec3 left = glm::cross(m_CameraPosition - m_CameraCenter, m_CameraUp);
       float leftMag = glm::length(left);
-    	m_CameraPosition.x += left.x * ts * m_CameraTranslationSpeed / leftMag;
-      m_CameraPosition.y += left.y * ts * m_CameraTranslationSpeed / leftMag;
-      m_CameraPosition.z += left.z * ts * m_CameraTranslationSpeed / leftMag;
+    	m_CameraCenter.x += left.x * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraCenter.y += left.y * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraCenter.z += left.z * ts * m_CameraTranslationSpeed / leftMag;
     }
 
     else if (Input::IsKeyPressed(AE_KEY_A))
     {
-      auto left = glm::cross(m_CameraPosition, m_CameraUp);
+      auto left = glm::cross(m_CameraPosition - m_CameraCenter, m_CameraUp);
       float leftMag = glm::length(left);
-			m_CameraPosition.x -= left.x * ts * m_CameraTranslationSpeed / leftMag;
-      m_CameraPosition.y -= left.y * ts * m_CameraTranslationSpeed / leftMag;
-      m_CameraPosition.z -= left.z * ts * m_CameraTranslationSpeed / leftMag;
+			m_CameraCenter.x -= left.x * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraCenter.y -= left.y * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraCenter.z -= left.z * ts * m_CameraTranslationSpeed / leftMag;
     }
 
-    m_Camera.SetView(m_CameraPosition);
+    m_Camera.SetView(m_CameraPosition, m_CameraCenter, m_CameraUp);
 
-    m_CameraTranslationSpeed = m_ZoomLevel * 10.0f;
+    m_CameraTranslationSpeed = m_ZoomLevel * 1.0f;
   }
 
   void PerspectiveCameraController::OnEvent(Event& e)
@@ -67,15 +67,15 @@ namespace Ancora {
   {
     m_ZoomLevel -= e.GetYOffset() * 0.15f;
     m_ZoomLevel = std::max(m_ZoomLevel, glm::radians(1.0f) / m_FOV);
-    m_ZoomLevel = std::min(m_ZoomLevel, glm::radians(150.0f) / m_FOV);
-    m_Camera.SetProjection(m_FOV * m_ZoomLevel, m_AspectRatio, 1.0f, 50.0f);
+    m_ZoomLevel = std::min(m_ZoomLevel, glm::radians(100.0f) / m_FOV);
+    m_Camera.SetProjection(m_FOV * m_ZoomLevel, m_AspectRatio, 0.1f, 50.0f);
     return false;
   }
 
   bool PerspectiveCameraController::OnWindowResized(WindowResizeEvent& e)
   {
     m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-    m_Camera.SetProjection(m_FOV * m_ZoomLevel, m_AspectRatio, 1.0f, 50.0f);
+    m_Camera.SetProjection(m_FOV * m_ZoomLevel, m_AspectRatio, 0.1f, 50.0f);
     return false;
   }
 

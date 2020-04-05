@@ -31,7 +31,7 @@ namespace Ancora {
     glm::vec3 m_CameraCenter = { 0.0f, 0.0f, 0.0f };
     glm::vec3 m_CameraUp = { -0.5f, 1.0f, -0.5f };
 
-    float m_CameraTranslationSpeed = 10.0f;
+    float m_CameraTranslationSpeed = 0.1f;
   };
 
 }

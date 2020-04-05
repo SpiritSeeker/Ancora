@@ -12,7 +12,7 @@ Sandbox3D::Sandbox3D()
 
 void Sandbox3D::OnAttach()
 {
-  m_Texture = Ancora::Texture2D::Create("Sandbox/assets/textures/pic.png");
+  // m_Texture = Ancora::Texture2D::Create("Sandbox/assets/textures/pic.png");
 }
 
 void Sandbox3D::OnDetach()
