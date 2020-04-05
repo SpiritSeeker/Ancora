@@ -31,9 +31,7 @@ void Sandbox3D::OnUpdate(Ancora::Timestep ts)
 	Ancora::RenderCommand::Clear();
 
 	Ancora::Renderer3D::BeginScene(m_CameraController.GetCamera());
-  // Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-  // Ancora::Renderer2D::DrawQuad({ 0.0f, -0.5f }, { 0.15f, 0.35f }, m_SquareColor);
-  // Ancora::Renderer2D::DrawRotatedQuad({ 0.5f, 0.5f }, glm::radians(30.0f), { 0.5f, 0.5f }, m_Texture, 10, m_SquareColor);
+
   glm::vec3 center = glm::vec3(0.0f, 0.0f, -0.0f);
   float size = 1.0f;
   std::array<glm::vec3, 8> vertices;
@@ -49,14 +47,6 @@ void Sandbox3D::OnUpdate(Ancora::Timestep ts)
 
   Ancora::Renderer3D::DrawCube(vertices, m_SquareColor);
 
-  center = glm::vec3(5.0f, 5.0f, m_Back);
-  std::array<glm::vec3, 4> vertices1;
-  vertices1[0] = { center.x - size / 2, center.y - size / 2, center.z };
-  vertices1[1] = { center.x + size / 2, center.y - size / 2, center.z };
-  vertices1[2] = { center.x + size / 2, center.y + size / 2, center.z };
-  vertices1[3] = { center.x - size / 2, center.y + size / 2, center.z };
-
-  Ancora::Renderer3D::DrawQuad(vertices1, m_SquareColor);
   Ancora::Renderer3D::EndScene();
 }
 
@@ -66,28 +56,15 @@ void Sandbox3D::OnImGuiRender()
 	ImGui::Text("FPS: %d", m_FPS);
 	ImGui::End();
 
-	ImGui::Begin("Settings");
-	// ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-  ImGui::DragFloat("Back", &m_Back, 0.1f, -1000.0f, -4.0f);
-	ImGui::End();
-}
+  auto left = glm::cross(m_CameraController.GetCamera().GetCenter() - m_CameraController.GetCamera().GetPosition(), m_CameraController.GetCamera().GetUp());
 
-// void Sandbox3D::DrawCube(const glm::vec3& position, float size, const glm::vec4& color)
-// {
-//   glm::vec3 quad1 = position + glm::vec3({ -size / 2, -size / 2, size / 2 });
-//   glm::vec3 quad2 = position + glm::vec3({ size / 2, 0, 0 });
-//   glm::vec3 quad3 = position + glm::vec3({ 0, 0, -size / 2 });
-//   glm::vec3 quad4 = position + glm::vec3({ -size / 2, 0, 0 });
-//   glm::vec3 quad5 = position + glm::vec3({ 0, size / 2, 0 });
-//   glm::vec3 quad6 = position + glm::vec3({ 0, -size / 2, 0 });
-//
-//   Ancora::Renderer3D::DrawQuad(quad1, color);
-//   Ancora::Renderer3D::DrawQuad(quad%, color);
-//   Ancora::Renderer3D::DrawQuad(quad%, color);
-//   Ancora::Renderer3D::DrawQuad(quad%, color);
-//   Ancora::Renderer3D::DrawQuad(quad%, color);
-//   Ancora::Renderer3D::DrawQuad(quad%, color);
-// }
+	ImGui::Begin("Settings");
+	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+  ImGui::Text("%f, %f, %f: Position", m_CameraController.GetCamera().GetPosition().x, m_CameraController.GetCamera().GetPosition().y, m_CameraController.GetCamera().GetPosition().z);
+  ImGui::Text("%f, %f, %f: Left", left.x, left.y, left.z);
+  ImGui::Text("%f, %f, %f: Up", m_CameraController.GetCamera().GetUp().x, m_CameraController.GetCamera().GetUp().y, m_CameraController.GetCamera().GetUp().z);
+  ImGui::End();
+}
 
 void Sandbox3D::OnEvent(Ancora::Event& e)
 {

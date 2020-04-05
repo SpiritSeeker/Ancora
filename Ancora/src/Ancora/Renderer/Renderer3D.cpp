@@ -86,10 +86,10 @@ namespace Ancora {
     s_Data.TextureShader->SetMat4("u_Transform", glm::mat4(1.0f));
 
     float vertexData[] = {
-      vertices[0].x, vertices[0].y, vertices[0].z, 0.0f, 0.0f, 0.2f, 0.3f, 0.7f, 1.0f,
-      vertices[1].x, vertices[1].y, vertices[1].z, 1.0f, 0.0f, 0.4f, 0.3f, 0.5f, 1.0f,
-      vertices[2].x, vertices[2].y, vertices[2].z, 1.0f, 1.0f, 0.6f, 0.3f, 0.3f, 1.0f,
-      vertices[3].x, vertices[3].y, vertices[3].z, 0.0f, 1.0f, 0.8f, 0.3f, 0.2f, 1.0f
+      vertices[0].x, vertices[0].y, vertices[0].z, 0.0f, 0.0f, color.r, color.g, color.b, color.a,
+      vertices[1].x, vertices[1].y, vertices[1].z, 1.0f, 0.0f, color.r, color.g, color.b, color.a,
+      vertices[2].x, vertices[2].y, vertices[2].z, 1.0f, 1.0f, color.r, color.g, color.b, color.a,
+      vertices[3].x, vertices[3].y, vertices[3].z, 0.0f, 1.0f, color.r, color.g, color.b, color.a
     };
 
     s_Data.QuadVertexBuffer->SetData(vertexData, sizeof(vertexData));
@@ -106,15 +106,15 @@ namespace Ancora {
     s_Data.TextureShader->SetMat4("u_Transform", transform);
 
     float vertexData[] = {
-      vertices[0].x, vertices[0].y, vertices[0].z, 0.0f, 0.0f, 0.2f, 0.3f, 0.7f, 1.0f,
-      vertices[1].x, vertices[1].y, vertices[1].z, 1.0f, 0.0f, 0.4f, 0.3f, 0.5f, 1.0f,
-      vertices[2].x, vertices[2].y, vertices[2].z, 1.0f, 1.0f, 0.6f, 0.3f, 0.3f, 1.0f,
-      vertices[3].x, vertices[3].y, vertices[3].z, 0.0f, 1.0f, 0.8f, 0.3f, 0.2f, 1.0f,
+      vertices[0].x, vertices[0].y, vertices[0].z, 0.0f, 0.0f, color.r, color.g, color.b, color.a,
+      vertices[1].x, vertices[1].y, vertices[1].z, 1.0f, 0.0f, color.r, color.g, color.b, color.a,
+      vertices[2].x, vertices[2].y, vertices[2].z, 1.0f, 1.0f, color.r, color.g, color.b, color.a,
+      vertices[3].x, vertices[3].y, vertices[3].z, 0.0f, 1.0f, color.r, color.g, color.b, color.a,
 
-      vertices[4].x, vertices[4].y, vertices[4].z, 0.0f, 0.0f, 0.2f, 0.3f, 0.7f, 1.0f,
-      vertices[5].x, vertices[5].y, vertices[5].z, 1.0f, 0.0f, 0.4f, 0.3f, 0.5f, 1.0f,
-      vertices[6].x, vertices[6].y, vertices[6].z, 1.0f, 1.0f, 0.6f, 0.3f, 0.3f, 1.0f,
-      vertices[7].x, vertices[7].y, vertices[7].z, 0.0f, 1.0f, 0.8f, 0.3f, 0.2f, 1.0f
+      vertices[4].x, vertices[4].y, vertices[4].z, 0.0f, 0.0f, 1 - color.r, color.g, color.b, color.a,
+      vertices[5].x, vertices[5].y, vertices[5].z, 1.0f, 0.0f, 1 - color.r, color.g, color.b, color.a,
+      vertices[6].x, vertices[6].y, vertices[6].z, 1.0f, 1.0f, 1 - color.r, color.g, color.b, color.a,
+      vertices[7].x, vertices[7].y, vertices[7].z, 0.0f, 1.0f, 1 - color.r, color.g, color.b, color.a
     };
 
     s_Data.QuadVertexBuffer->SetData(vertexData, sizeof(vertexData));

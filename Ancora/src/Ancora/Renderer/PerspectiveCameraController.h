@@ -26,6 +26,12 @@ namespace Ancora {
     float m_AspectRatio;
     float m_ZoomLevel = 1.0f;
     PerspectiveCamera m_Camera;
+
+    glm::vec3 m_CameraPosition = { 5.0f, 5.0f, 5.0f };
+    glm::vec3 m_CameraCenter = { 0.0f, 0.0f, 0.0f };
+    glm::vec3 m_CameraUp = { -0.5f, 1.0f, -0.5f };
+
+    float m_CameraTranslationSpeed = 10.0f;
   };
 
 }

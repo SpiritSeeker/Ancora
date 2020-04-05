@@ -11,20 +11,15 @@ namespace Ancora {
 
     void SetProjection(float fov, float aspect, float near, float far);
 
-    const glm::vec3&  GetPosition() const { return m_Position; }
-    void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
+    void SetView(const glm::vec3& position, const glm::vec3& center = glm::vec3(0.0f), const glm::vec3& up = glm::vec3(0.0f));
 
+    const glm::vec3& GetPosition() const { return m_Position; }
     const glm::vec3& GetCenter() const { return m_Center; }
-    void SetCenter(const glm::vec3& center) { m_Center = center; RecalculateViewMatrix(); }
-
     const glm::vec3& GetUp() const { return m_Up; }
-    void SetUp(const glm::vec3& up) { m_Up = up; RecalculateViewMatrix(); }
 
     const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
     const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
     const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
-  private:
-    void RecalculateViewMatrix();
   private:
     glm::mat4 m_ProjectionMatrix;
     glm::mat4 m_ViewMatrix;

@@ -1,6 +1,9 @@
 #include "aepch.h"
 #include "PerspectiveCameraController.h"
 
+#include "Ancora/Core/Input.h"
+#include "Ancora/Core/KeyCodes.h"
+
 namespace Ancora {
 
   PerspectiveCameraController::PerspectiveCameraController(float fov, float aspect)
@@ -10,6 +13,47 @@ namespace Ancora {
 
   void PerspectiveCameraController::OnUpdate(Timestep ts)
   {
+    m_CameraPosition = m_Camera.GetPosition();
+    m_CameraCenter = m_Camera.GetCenter();
+    m_CameraUp = m_Camera.GetUp();
+
+    if (Input::IsKeyPressed(AE_KEY_W))
+    {
+      float upMag = glm::length(m_CameraUp);
+			m_CameraPosition.x += m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.y += m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.z += m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
+    }
+
+		else if (Input::IsKeyPressed(AE_KEY_S))
+    {
+      float upMag = glm::length(m_CameraUp);
+    	m_CameraPosition.x -= m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.y -= m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.z -= m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
+    }
+
+		if (Input::IsKeyPressed(AE_KEY_D))
+    {
+      glm::vec3 left = glm::cross(m_CameraPosition, m_CameraUp);
+      float leftMag = glm::length(left);
+    	m_CameraPosition.x += left.x * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.y += left.y * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.z += left.z * ts * m_CameraTranslationSpeed / leftMag;
+    }
+
+    else if (Input::IsKeyPressed(AE_KEY_A))
+    {
+      auto left = glm::cross(m_CameraPosition, m_CameraUp);
+      float leftMag = glm::length(left);
+			m_CameraPosition.x -= left.x * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.y -= left.y * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.z -= left.z * ts * m_CameraTranslationSpeed / leftMag;
+    }
+
+    m_Camera.SetView(m_CameraPosition);
+
+    m_CameraTranslationSpeed = m_ZoomLevel * 10.0f;
   }
 
   void PerspectiveCameraController::OnEvent(Event& e)
