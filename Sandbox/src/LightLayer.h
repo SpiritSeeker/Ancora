@@ -26,4 +26,8 @@ private:
   Ancora::Ref<Ancora::VertexArray> m_LightVertexArray;
   Ancora::Ref<Ancora::VertexBuffer> m_LightVertexBuffer;
   Ancora::Ref<Ancora::Shader> m_LightShader;
+
+  glm::vec3 m_LightPosition;
+  glm::vec3 m_LightColor = { 1.0f, 1.0f, 1.0f };
+  float m_Time = 0.0f;
 };

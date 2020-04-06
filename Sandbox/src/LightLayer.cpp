@@ -79,18 +79,26 @@ void LightLayer::OnAttach()
   m_VertexArray->SetIndexBuffer(indexBuffer);
   m_LightVertexArray->SetIndexBuffer(indexBuffer);
 
-  glm::vec3 lightPosition = { -2.0f, 2.0f, 2.0f };
+  m_LightPosition = { -2.0f, 2.0f, 2.0f };
 
   m_Shader = Ancora::Shader::Create("Sandbox/assets/shaders/Lighting.glsl");
   m_Shader->Bind();
   m_Shader->SetMat4("u_Transform", glm::mat4(1.0f));
-  m_Shader->SetFloat3("u_Color", glm::vec3({ 1.0f, 0.5f, 0.3f }));
-  m_Shader->SetFloat3("u_LightColor", glm::vec3(1.0f));
-  m_Shader->SetFloat3("u_LightPosition", lightPosition);
+
+  m_Shader->SetFloat3("u_Material.ambient", glm::vec3({ 2.0f, 0.3f, 0.7f }));
+  m_Shader->SetFloat3("u_Material.diffuse", glm::vec3({ 2.0f, 0.3f, 0.7f }));
+  m_Shader->SetFloat3("u_Material.specular", glm::vec3({ 0.5f, 0.5f, 0.5f }));
+  m_Shader->SetFloat("u_Material.shininess", 32.0f);
+
+  m_Shader->SetFloat3("u_Light.position", m_LightPosition);
+  m_Shader->SetFloat3("u_Light.ambient", m_LightColor * glm::vec3(0.2f));
+  m_Shader->SetFloat3("u_Light.diffuse", m_LightColor * glm::vec3(0.5f));
+  m_Shader->SetFloat3("u_Light.specular", glm::vec3(1.0f));
 
   m_LightShader = Ancora::Shader::Create("Sandbox/assets/shaders/LightCube.glsl");
   m_LightShader->Bind();
-  m_LightShader->SetMat4("u_Transform", glm::translate(glm::mat4(1.0f), lightPosition) * glm::scale(glm::mat4(1.0f), glm::vec3({ 0.25f, 0.25f, 0.25f })));
+  m_LightShader->SetMat4("u_Transform", glm::translate(glm::mat4(1.0f), m_LightPosition) * glm::scale(glm::mat4(1.0f), glm::vec3({ 0.25f, 0.25f, 0.25f })));
+  m_LightShader->SetFloat3("u_Color", m_LightColor);
 
   m_CameraController.GetCamera().SetView({ 5.0f, 5.0f, 5.0f }, { 0.0f, 0.0f, 0.0f }, { -0.5f, 1.0f, -0.5f });
 }
@@ -101,18 +109,34 @@ void LightLayer::OnDetach()
 
 void LightLayer::OnUpdate(Ancora::Timestep ts)
 {
+  m_Time += ts;
+
   Ancora::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Ancora::RenderCommand::Clear();
+
+  // m_LightColor.x = sin(m_Time * 2.0f);
+  // m_LightColor.y = sin(m_Time * 0.7f);
+  // m_LightColor.z = sin(m_Time * 1.3f);
+
+  m_LightPosition.x = 3.0f * sin(m_Time * 0.8f);
+  m_LightPosition.z = 3.0f * cos(m_Time * 0.8f);
 
   m_CameraController.OnUpdate(ts);
   m_Shader->Bind();
   m_Shader->SetMat4("u_ViewProjection", m_CameraController.GetCamera().GetViewProjectionMatrix());
   m_Shader->SetFloat3("u_CameraPosition", m_CameraController.GetCamera().GetPosition());
+
+  m_Shader->SetFloat3("u_Light.position", m_LightPosition);
+  m_Shader->SetFloat3("u_Light.ambient", m_LightColor * glm::vec3(0.1f) + glm::vec3(0.1f));
+  m_Shader->SetFloat3("u_Light.diffuse", m_LightColor * glm::vec3(0.5f));
+
   m_VertexArray->Bind();
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 
   m_LightShader->Bind();
   m_LightShader->SetMat4("u_ViewProjection", m_CameraController.GetCamera().GetViewProjectionMatrix());
+  m_LightShader->SetMat4("u_Transform", glm::translate(glm::mat4(1.0f), m_LightPosition) * glm::scale(glm::mat4(1.0f), glm::vec3({ 0.25f, 0.25f, 0.25f })));
+  m_LightShader->SetFloat3("u_Color", m_LightColor);
   m_LightVertexArray->Bind();
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 }
@@ -127,9 +151,9 @@ void LightLayer::OnImGuiRender()
 
 	ImGui::Begin("Settings");
 	// ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-  ImGui::Text("%f, %f, %f: Position", m_CameraController.GetCamera().GetCenter().x, m_CameraController.GetCamera().GetCenter().y, m_CameraController.GetCamera().GetCenter().z);
-  ImGui::Text("%f, %f, %f: Left", left.x, left.y, left.z);
-  ImGui::Text("%f, %f, %f: Up", m_CameraController.GetCamera().GetUp().x, m_CameraController.GetCamera().GetUp().y, m_CameraController.GetCamera().GetUp().z);
+  // ImGui::Text("%f, %f, %f: Position", m_CameraController.GetCamera().GetCenter().x, m_CameraController.GetCamera().GetCenter().y, m_CameraController.GetCamera().GetCenter().z);
+  ImGui::Text("%f, %f, %f: Left", m_LightColor.x, m_LightColor.y, m_LightColor.z);
+  // ImGui::Text("%f, %f, %f: Up", m_CameraController.GetCamera().GetUp().x, m_CameraController.GetCamera().GetUp().y, m_CameraController.GetCamera().GetUp().z);
   ImGui::End();
 }
 
