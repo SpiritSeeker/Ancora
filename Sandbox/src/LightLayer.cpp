@@ -107,6 +107,7 @@ void LightLayer::OnUpdate(Ancora::Timestep ts)
   m_CameraController.OnUpdate(ts);
   m_Shader->Bind();
   m_Shader->SetMat4("u_ViewProjection", m_CameraController.GetCamera().GetViewProjectionMatrix());
+  m_Shader->SetFloat3("u_CameraPosition", m_CameraController.GetCamera().GetPosition());
   m_VertexArray->Bind();
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 
