@@ -16,41 +16,42 @@ void LightLayer::OnAttach()
   m_LightVertexArray = Ancora::VertexArray::Create();
 
   float vertices[] = {
-     0.5f, -0.5f, -0.5f,
-     0.5f,  0.5f, -0.5f,
-     0.5f,  0.5f,  0.5f,
-     0.5f, -0.5f,  0.5f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-    -0.5f,  0.5f, -0.5f,
-    -0.5f, -0.5f, -0.5f,
-    -0.5f, -0.5f,  0.5f,
-    -0.5f,  0.5f,  0.5f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-     0.5f,  0.5f, -0.5f,
-    -0.5f,  0.5f, -0.5f,
-    -0.5f,  0.5f,  0.5f,
-     0.5f,  0.5f,  0.5f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
 
-    -0.5f, -0.5f, -0.5f,
-     0.5f, -0.5f, -0.5f,
-     0.5f, -0.5f,  0.5f,
-    -0.5f, -0.5f,  0.5f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
 
-    -0.5f, -0.5f,  0.5f,
-     0.5f, -0.5f,  0.5f,
-     0.5f,  0.5f,  0.5f,
-    -0.5f,  0.5f,  0.5f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-     0.5f, -0.5f, -0.5f,
-    -0.5f, -0.5f, -0.5f,
-    -0.5f,  0.5f, -0.5f,
-     0.5f,  0.5f, -0.5f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f
   };
 
-  m_VertexBuffer = Ancora::VertexBuffer::Create(vertices, 6 * 4 * 3 * sizeof(float));
-  m_LightVertexBuffer = Ancora::VertexBuffer::Create(vertices, 6 * 4 * 3 * sizeof(float));
+  m_VertexBuffer = Ancora::VertexBuffer::Create(vertices, 6 * 4 * 6 * sizeof(float));
+  m_LightVertexBuffer = Ancora::VertexBuffer::Create(vertices, 6 * 4 * 6 * sizeof(float));
   Ancora::BufferLayout layout = {
-    { Ancora::ShaderDataType::Float3, "a_Position" }
+    { Ancora::ShaderDataType::Float3, "a_Position" },
+    { Ancora::ShaderDataType::Float3, "a_Normal" }
   };
   m_VertexBuffer->SetLayout(layout);
   m_VertexArray->AddVertexBuffer(m_VertexBuffer);
@@ -78,15 +79,18 @@ void LightLayer::OnAttach()
   m_VertexArray->SetIndexBuffer(indexBuffer);
   m_LightVertexArray->SetIndexBuffer(indexBuffer);
 
+  glm::vec3 lightPosition = { -2.0f, 2.0f, 2.0f };
+
   m_Shader = Ancora::Shader::Create("Sandbox/assets/shaders/Lighting.glsl");
   m_Shader->Bind();
   m_Shader->SetMat4("u_Transform", glm::mat4(1.0f));
-  m_Shader->SetFloat4("u_Color", glm::vec4({ 1.0f, 0.5f, 0.3f, 1.0f }));
-  m_Shader->SetFloat4("u_LightColor", glm::vec4(1.0f));
+  m_Shader->SetFloat3("u_Color", glm::vec3({ 1.0f, 0.5f, 0.3f }));
+  m_Shader->SetFloat3("u_LightColor", glm::vec3(1.0f));
+  m_Shader->SetFloat3("u_LightPosition", lightPosition);
 
   m_LightShader = Ancora::Shader::Create("Sandbox/assets/shaders/LightCube.glsl");
   m_LightShader->Bind();
-  m_LightShader->SetMat4("u_Transform", glm::translate(glm::mat4(1.0f), { -2.0f, 2.0f, 2.0f }) * glm::scale(glm::mat4(1.0f), glm::vec3({ 0.25f, 0.25f, 0.25f })));
+  m_LightShader->SetMat4("u_Transform", glm::translate(glm::mat4(1.0f), lightPosition) * glm::scale(glm::mat4(1.0f), glm::vec3({ 0.25f, 0.25f, 0.25f })));
 
   m_CameraController.GetCamera().SetView({ 5.0f, 5.0f, 5.0f }, { 0.0f, 0.0f, 0.0f }, { -0.5f, 1.0f, -0.5f });
 }
