@@ -9,6 +9,7 @@
 #include "Sandbox2D.h"
 #include "Sandbox3D.h"
 #include "CubeMap.h"
+#include "ObjLayer.h"
 
 class ExampleLayer : public Ancora::Layer
 {
@@ -219,7 +220,8 @@ public:
 	{
 		// PushLayer(new ExampleLayer());
 		// PushLayer(new Sandbox3D());
-		PushLayer(new CubeMap());
+		// PushLayer(new CubeMap());
+		PushLayer(new ObjLayer());
 	}
 
 	~Sandbox()

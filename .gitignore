@@ -2,6 +2,7 @@
 
 bin/
 bin-int/
+Sandbox/assets/models/
 
 # Files
 Makefile
