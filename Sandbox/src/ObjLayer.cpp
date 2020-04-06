@@ -1,5 +1,5 @@
 #include "ObjLayer.h"
-#include "ObjParser.h"
+// #include "ObjParser.h"
 
 #include "imgui.h"
 
@@ -19,7 +19,7 @@ void ObjLayer::OnAttach()
   std::vector<float> uvs;
   std::vector<float> normals;
 
-  LoadObj("Sandbox/assets/models/blender/cat/12221_Cat_v1_l3.obj", vertices, uvs, normals);
+  // LoadObj("Sandbox/assets/models/blender/cat/12221_Cat_v1_l3.obj", vertices, uvs, normals);
 
   m_VertexBuffer = Ancora::VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float));
   Ancora::BufferLayout layout = {

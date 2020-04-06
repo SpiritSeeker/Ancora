@@ -30,4 +30,9 @@ private:
   glm::vec3 m_LightPosition;
   glm::vec3 m_LightColor = { 1.0f, 1.0f, 1.0f };
   float m_Time = 0.0f;
+
+  int m_FPS;
+
+  float m_Metal = 32.0f;
+  uint32_t m_Num;
 };

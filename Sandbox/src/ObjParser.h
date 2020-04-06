@@ -45,13 +45,13 @@ void LoadObj(const char* path, std::vector<float>& out_vertices, std::vector<flo
     else if (strcmp(lineHeader, "f") == 0)
     {
       unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-      fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+      fscanf(file, "%d//%d %d//%d %d//%d\n", &vertexIndex[0], &normalIndex[0], &vertexIndex[1], &normalIndex[1], &vertexIndex[2], &normalIndex[2]);
       vertexIndices.push_back(vertexIndex[0]);
       vertexIndices.push_back(vertexIndex[1]);
       vertexIndices.push_back(vertexIndex[2]);
-      uvIndices.push_back(uvIndex[0]);
-      uvIndices.push_back(uvIndex[1]);
-      uvIndices.push_back(uvIndex[2]);
+      // uvIndices.push_back(uvIndex[0]);
+      // uvIndices.push_back(uvIndex[1]);
+      // uvIndices.push_back(uvIndex[2]);
       normalIndices.push_back(normalIndex[0]);
       normalIndices.push_back(normalIndex[1]);
       normalIndices.push_back(normalIndex[2]);
@@ -67,13 +67,13 @@ void LoadObj(const char* path, std::vector<float>& out_vertices, std::vector<flo
     out_vertices.push_back(vertex.z);
   }
 
-  for (uint32_t i = 0; i < uvIndices.size(); i++)
-  {
-    unsigned int uvIndex = uvIndices[i];
-    glm::vec2 uv = temp_uvs[uvIndex - 1];
-    out_uvs.push_back(uv.x);
-    out_uvs.push_back(uv.y);
-  }
+  // for (uint32_t i = 0; i < uvIndices.size(); i++)
+  // {
+  //   unsigned int uvIndex = uvIndices[i];
+  //   glm::vec2 uv = temp_uvs[uvIndex - 1];
+  //   out_uvs.push_back(uv.x);
+  //   out_uvs.push_back(uv.y);
+  // }
 
   for (uint32_t i = 0; i < normalIndices.size(); i++)
   {
