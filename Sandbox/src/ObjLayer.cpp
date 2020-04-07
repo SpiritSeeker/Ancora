@@ -1,5 +1,5 @@
 #include "ObjLayer.h"
-// #include "ObjParser.h"
+#include "ObjParser.h"
 
 #include "imgui.h"
 
@@ -13,36 +13,25 @@ ObjLayer::ObjLayer()
 
 void ObjLayer::OnAttach()
 {
-  m_VertexArray = Ancora::VertexArray::Create();
-
   std::vector<float> vertices;
   std::vector<float> uvs;
   std::vector<float> normals;
 
-  // LoadObj("Sandbox/assets/models/blender/cat/12221_Cat_v1_l3.obj", vertices, uvs, normals);
+  LoadObj("Sandbox/assets/models/Cerberus_by_Andrew_Maximov/Cerberus_LP.obj", vertices, uvs, normals);
 
-  m_VertexBuffer = Ancora::VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float));
-  Ancora::BufferLayout layout = {
-    { Ancora::ShaderDataType::Float3, "a_Position" }
-  };
-  m_VertexBuffer->SetLayout(layout);
-  m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+  m_Num = vertices.size() / 3;
+  AE_TRACE("{0}", m_Num);
 
-  AE_TRACE("{0}", vertices.size() / 3);
+  for (uint32_t i = 0; i < m_Num; i++)
+  {
+    Ancora::VertexData3D vertex;
+    vertex.Position = { vertices[3*i], vertices[3*i+1], vertices[3*i+2] };
+    vertex.TexCoord = { 0.0f, 0.0f };
+    vertex.Normal = { normals[3*i], normals[3*i+1], normals[3*i+2] };
+    vertexData.push_back(vertex);
+  }
 
-  std::vector<uint32_t> indices;
-  for (uint32_t i = 0; i < (int)(vertices.size() / 3); i++)
-    indices.push_back(i);
-
-  m_Num = indices.size();
-
-  Ancora::Ref<Ancora::IndexBuffer> indexBuffer;
-  indexBuffer = Ancora::IndexBuffer::Create(&indices[0], indices.size());
-  m_VertexArray->SetIndexBuffer(indexBuffer);
-
-  m_Shader = Ancora::Shader::Create("Sandbox/assets/shaders/FlatColor.glsl");
-  m_Shader->Bind();
-  m_CameraController.GetCamera().SetView({ 20.0f, 20.0f, 20.0f }, { 0.0f, 0.0f, 0.0f }, { -0.5f, 1.0f, -0.5f });
+  m_CameraController.GetCamera().SetView({ 5.0f, 5.0f, 5.0f }, { 0.0f, 0.0f, 0.0f }, { -0.5f, 1.0f, -0.5f });
   AE_TRACE("Loaded!");
 }
 
@@ -56,24 +45,35 @@ void ObjLayer::OnUpdate(Ancora::Timestep ts)
   Ancora::RenderCommand::Clear();
 
   m_CameraController.OnUpdate(ts);
-  m_Shader->Bind();
-  m_Shader->SetMat4("u_ViewProjection", m_CameraController.GetCamera().GetViewProjectionMatrix());
-  m_Shader->SetMat4("u_Transform", glm::scale(glm::mat4(1.0f), glm::vec3({ 0.20f, 0.20f, 0.20f })));
-  m_Shader->SetFloat4("u_Color", { 0.15f, 0.15f, 0.15f, 1.0f });
 
-  glDrawElements(GL_TRIANGLES, m_Num, GL_UNSIGNED_INT, nullptr);
+  Ancora::Renderer3D::BeginScene(m_CameraController.GetCamera(), false, true);
+  Ancora::Renderer3D::DrawObject(vertexData, { 0.4f, 0.4f, 0.4f, 1.0f }, glm::scale(glm::mat4(1.0f), glm::vec3({ 0.05f, 0.05f, 0.05f })));
+  Ancora::Renderer3D::EndScene();
+
+  Ancora::Renderer3D::BeginScene(m_CameraController.GetCamera());
+
+  glm::vec3 center = glm::vec3(0.0f, 0.0f, -0.0f);
+  float size = 1.0f;
+  std::array<glm::vec3, 8> vertices;
+  vertices[0] = { center.x - size / 2, center.y - size / 2, center.z + size / 2 };
+  vertices[1] = { center.x + size / 2, center.y - size / 2, center.z + size / 2 };
+  vertices[2] = { center.x + size / 2, center.y + size / 2, center.z + size / 2 };
+  vertices[3] = { center.x - size / 2, center.y + size / 2, center.z + size / 2 };
+
+  vertices[4] = { center.x + size / 2, center.y + size / 2, center.z - size / 2 };
+  vertices[5] = { center.x - size / 2, center.y + size / 2, center.z - size / 2 };
+  vertices[6] = { center.x - size / 2, center.y - size / 2, center.z - size / 2 };
+  vertices[7] = { center.x + size / 2, center.y - size / 2, center.z - size / 2 };
+
+  Ancora::Renderer3D::DrawCube(vertices, glm::vec4(1.0f), glm::translate(glm::mat4(1.0f), glm::vec3({ -2.0f, 2.0f, 2.0f })) * glm::scale(glm::mat4(1.0f), glm::vec3(0.25f)));
+  Ancora::Renderer3D::EndScene();
 }
 
 void ObjLayer::OnImGuiRender()
 {
-  // ImGui::Begin("Test");
-	// ImGui::Text("FPS: %d", m_FPS);
-	// ImGui::End();
-
   auto left = glm::cross(m_CameraController.GetCamera().GetCenter() - m_CameraController.GetCamera().GetPosition(), m_CameraController.GetCamera().GetUp());
 
 	ImGui::Begin("Settings");
-	// ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
   ImGui::Text("%f, %f, %f: Position", m_CameraController.GetCamera().GetCenter().x, m_CameraController.GetCamera().GetCenter().y, m_CameraController.GetCamera().GetCenter().z);
   ImGui::Text("%f, %f, %f: Left", left.x, left.y, left.z);
   ImGui::Text("%f, %f, %f: Up", m_CameraController.GetCamera().GetUp().x, m_CameraController.GetCamera().GetUp().y, m_CameraController.GetCamera().GetUp().z);

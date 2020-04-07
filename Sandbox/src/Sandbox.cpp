@@ -222,8 +222,8 @@ public:
 		// PushLayer(new ExampleLayer());
 		// PushLayer(new Sandbox3D());
 		// PushLayer(new CubeMap());
-		// PushLayer(new ObjLayer());
-		PushLayer(new LightLayer());
+		PushLayer(new ObjLayer());
+		// PushLayer(new LightLayer());
 	}
 
 	~Sandbox()
