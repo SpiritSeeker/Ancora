@@ -26,6 +26,7 @@ namespace Ancora {
   class OpenGLIndexBuffer : public IndexBuffer
   {
   public:
+    OpenGLIndexBuffer(uint32_t count);
     OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
     virtual ~OpenGLIndexBuffer();
 
@@ -33,6 +34,8 @@ namespace Ancora {
     virtual void Unbind() const override;
 
     virtual uint32_t GetCount() const { return m_Count; }
+
+    virtual void SetData(const void* data, uint32_t size) override;
   private:
     uint32_t m_RendererID;
     uint32_t m_Count;

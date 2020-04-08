@@ -17,6 +17,7 @@ namespace Ancora {
 
     Ref<VertexArray> QuadVertexArray;
     Ref<VertexBuffer> QuadVertexBuffer;
+    Ref<IndexBuffer> QuadIndexBuffer;
     ShaderLibrary Shaders;
     Ref<Texture2D> WhiteTexture;
     Ref<Texture2D> ColorTexture;
@@ -45,16 +46,8 @@ namespace Ancora {
     s_Data.QuadVertexBuffer->SetLayout(layout);
     s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
-    uint32_t* indices = new uint32_t[s_Data.MaxIndices];
-
-    // TODO: Improve this
-    for (uint32_t i = 0; i < s_Data.MaxIndices; i++)
-      indices[i] = i;
-
-    Ref<IndexBuffer> indexBuffer;
-    indexBuffer = IndexBuffer::Create(indices, s_Data.MaxIndices);
-    s_Data.QuadVertexArray->SetIndexBuffer(indexBuffer);
-    delete[] indices;
+    s_Data.QuadIndexBuffer = IndexBuffer::Create(s_Data.MaxIndices);
+    s_Data.QuadVertexArray->SetIndexBuffer(s_Data.QuadIndexBuffer);
 
     s_Data.WhiteTexture = Texture2D::Create(1, 1);
     uint32_t whiteTextureData = 0xffffffff;
@@ -93,6 +86,7 @@ namespace Ancora {
       s_Data.Shaders.Get("Lighting")->Bind();
       s_Data.Shaders.Get("Lighting")->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
       s_Data.Shaders.Get("Lighting")->SetFloat3("u_CameraPosition", camera.GetPosition());
+      s_Data.Shaders.Get("Lighting")->SetFloat3("u_Light.position", camera.GetPosition());
     }
     else
     {
@@ -132,6 +126,13 @@ namespace Ancora {
     };
 
     s_Data.QuadVertexBuffer->SetData(vertexData, sizeof(vertexData));
+
+    // TODO: Improve this
+    uint32_t indices[] = {
+      0, 1, 2,
+      2, 3, 0
+    };
+    s_Data.QuadIndexBuffer->SetData(indices, 6);
 
     RenderCommand::DrawIndexed(s_Data.QuadVertexArray, 6);
   }
@@ -197,6 +198,12 @@ namespace Ancora {
 
     s_Data.QuadVertexBuffer->SetData(vertexData, sizeof(vertexData));
 
+    uint32_t indices[36];
+    // TODO: Improve this
+    for (uint32_t i = 0; i < 36; i++)
+      indices[i] = i;
+    s_Data.QuadIndexBuffer->SetData(indices, 36);
+
     RenderCommand::DrawIndexed(s_Data.QuadVertexArray, 36);
   }
 
@@ -247,18 +254,91 @@ namespace Ancora {
         numIter++;
         count -= s_Data.MaxVertices;
         s_Data.QuadVertexBuffer->SetData(&data[0], s_Data.MaxVertices * sizeof(VertexData3D));
+
+        uint32_t* indices = new uint32_t[s_Data.MaxIndices];
+        for (uint32_t i = 0; i < s_Data.MaxIndices; i++)
+          indices[i] = i;
+        s_Data.QuadIndexBuffer->SetData(indices, s_Data.MaxIndices);
+        delete[] indices;
+
         RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.MaxIndices);
       }
 
       std::vector<VertexData3D> data(vertexData.begin() + numIter * s_Data.MaxVertices, vertexData.end());
       s_Data.QuadVertexBuffer->SetData(&data[0], count * sizeof(VertexData3D));
+
+      uint32_t* indices = new uint32_t[count];
+      for (uint32_t i = 0; i < count; i++)
+        indices[i] = i;
+      s_Data.QuadIndexBuffer->SetData(indices, count);
+      delete[] indices;
+
       RenderCommand::DrawIndexed(s_Data.QuadVertexArray, count);
     }
 
     else
     {
       s_Data.QuadVertexBuffer->SetData(&vertexData[0], vertexData.size() * sizeof(VertexData3D));
+
+      uint32_t* indices = new uint32_t[vertexData.size()];
+      for (uint32_t i = 0; i < vertexData.size(); i++)
+        indices[i] = i;
+      s_Data.QuadIndexBuffer->SetData(indices, vertexData.size());
+      delete[] indices;
+
       RenderCommand::DrawIndexed(s_Data.QuadVertexArray, vertexData.size());
+    }
+  }
+
+  void Renderer3D::DrawModel(Ref<Model3D> model, const glm::mat4& transform)
+  {
+    s_Data.Shaders.Get("Lighting")->Bind();
+    s_Data.Shaders.Get("Lighting")->SetMat4("u_Transform", transform);
+
+    s_Data.Shaders.Get("Lighting")->SetInt("u_Material.diffuse", 0);
+    s_Data.Shaders.Get("Lighting")->SetInt("u_Material.specular", 1);
+    s_Data.Shaders.Get("Lighting")->SetFloat("u_Material.shininess", 32.0f);
+
+    // s_Data.Shaders.Get("Lighting")->SetFloat3("u_Light.position", { -5.0f, 5.0f, 5.0f });
+    s_Data.Shaders.Get("Lighting")->SetFloat3("u_Light.ambient", glm::vec3(0.2f));
+    s_Data.Shaders.Get("Lighting")->SetFloat3("u_Light.diffuse", glm::vec3(0.5f));
+    s_Data.Shaders.Get("Lighting")->SetFloat3("u_Light.specular", glm::vec3(1.0f));
+
+    for (auto& mesh : model->GetMesh())
+    {
+      for (uint32_t i = 0; i < mesh.DiffuseTextures.size(); i++)
+        mesh.DiffuseTextures[i]->Bind(0);
+        for (uint32_t i = 0; i < mesh.SpecularTextures.size(); i++)
+          mesh.SpecularTextures[i]->Bind(1);
+
+      if (mesh.Vertices.size() > s_Data.MaxVertices)
+      {
+        uint32_t count = mesh.Vertices.size();
+        uint32_t numIter = 0;
+        while (count > s_Data.MaxVertices)
+        {
+          std::vector<VertexData3D> data(mesh.Vertices.begin() + numIter * s_Data.MaxVertices, mesh.Vertices.begin() + (numIter + 1) * s_Data.MaxVertices);
+          std::vector<uint32_t> index(mesh.Indices.begin() + numIter * s_Data.MaxIndices, mesh.Indices.begin() + (numIter + 1) * s_Data.MaxIndices);
+          numIter++;
+          count -= s_Data.MaxVertices;
+          s_Data.QuadVertexBuffer->SetData(&data[0], s_Data.MaxVertices * sizeof(VertexData3D));
+          s_Data.QuadIndexBuffer->SetData(&index[0], s_Data.MaxIndices);
+          RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.MaxIndices);
+        }
+
+        std::vector<VertexData3D> data(mesh.Vertices.begin() + numIter * s_Data.MaxVertices, mesh.Vertices.end());
+        std::vector<uint32_t> index(mesh.Indices.begin() + numIter * s_Data.MaxIndices, mesh.Indices.end());
+        s_Data.QuadVertexBuffer->SetData(&data[0], count * sizeof(VertexData3D));
+        s_Data.QuadIndexBuffer->SetData(&index[0], count);
+        RenderCommand::DrawIndexed(s_Data.QuadVertexArray, count);
+      }
+
+      else
+      {
+        s_Data.QuadVertexBuffer->SetData(&mesh.Vertices[0], mesh.Vertices.size() * sizeof(VertexData3D));
+        s_Data.QuadIndexBuffer->SetData(&mesh.Indices[0], mesh.Indices.size());
+        RenderCommand::DrawIndexed(s_Data.QuadVertexArray, mesh.Indices.size());
+      }
     }
   }
 

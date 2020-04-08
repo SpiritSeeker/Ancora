@@ -19,7 +19,5 @@ public:
 private:
   Ancora::PerspectiveCameraController m_CameraController;
 
-  std::vector<Ancora::VertexData3D> vertexData;
-
-  uint32_t m_Num;
+  Ancora::Ref<Ancora::Model3D> m_Model;
 };

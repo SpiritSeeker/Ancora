@@ -10,6 +10,7 @@
 #include "Ancora/Core/Input.h"
 #include "Ancora/Core/KeyCodes.h"
 #include "Ancora/Core/MouseButtonCodes.h"
+#include "Ancora/Core/ModelLoader.h"
 #include "Ancora/Renderer/OrthographicCameraController.h"
 #include "Ancora/Renderer/PerspectiveCameraController.h"
 
@@ -28,4 +29,6 @@
 
 #include "Ancora/Renderer/OrthographicCamera.h"
 #include "Ancora/Renderer/PerspectiveCamera.h"
+
+#include "Ancora/Renderer/Model3D.h"
 // ----------------------------------------------

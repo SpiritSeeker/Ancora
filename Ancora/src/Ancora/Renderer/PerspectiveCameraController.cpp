@@ -51,7 +51,53 @@ namespace Ancora {
       m_CameraPosition.z -= left.z * ts * m_CameraTranslationSpeed / leftMag;
     }
 
-    m_Camera.SetView(m_CameraPosition);
+    if (Input::IsKeyPressed(AE_KEY_I))
+    {
+      float upMag = glm::length(m_CameraUp);
+			m_CameraCenter.x += m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.x += m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraCenter.y += m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.y += m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraCenter.z += m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.z += m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
+    }
+
+		else if (Input::IsKeyPressed(AE_KEY_K))
+    {
+      float upMag = glm::length(m_CameraUp);
+    	m_CameraCenter.x -= m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.x -= m_CameraUp.x * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraCenter.y -= m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.y -= m_CameraUp.y * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraCenter.z -= m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
+      m_CameraPosition.z -= m_CameraUp.z * ts * m_CameraTranslationSpeed / upMag;
+    }
+
+		if (Input::IsKeyPressed(AE_KEY_L))
+    {
+      glm::vec3 left = glm::cross(m_CameraPosition - m_CameraCenter, m_CameraUp);
+      float leftMag = glm::length(left);
+    	m_CameraCenter.x += left.x * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.x += left.x * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraCenter.y += left.y * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.y += left.y * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraCenter.z += left.z * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.z += left.z * ts * m_CameraTranslationSpeed / leftMag;
+    }
+
+    else if (Input::IsKeyPressed(AE_KEY_J))
+    {
+      auto left = glm::cross(m_CameraPosition - m_CameraCenter, m_CameraUp);
+      float leftMag = glm::length(left);
+			m_CameraCenter.x -= left.x * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.x -= left.x * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraCenter.y -= left.y * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.y -= left.y * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraCenter.z -= left.z * ts * m_CameraTranslationSpeed / leftMag;
+      m_CameraPosition.z -= left.z * ts * m_CameraTranslationSpeed / leftMag;
+    }
+
+    m_Camera.SetView(m_CameraPosition, m_CameraCenter);
 
     m_CameraTranslationSpeed = m_ZoomLevel * glm::length(m_CameraCenter - m_CameraPosition);
   }
