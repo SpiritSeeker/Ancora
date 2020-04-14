@@ -14,7 +14,7 @@ namespace Ancora {
 
     static float Float()
     {
-      return (float)s_Distribution(s_RandomEngine) / (float)std::numeric_limits<uint64_t>::max();
+      return (float)s_Distribution(s_RandomEngine) / (float)std::numeric_limits<std::mt19937::result_type>::max();
     }
 
   private:
