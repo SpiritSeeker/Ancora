@@ -30,9 +30,13 @@ namespace Ancora {
     OrthographicCamera& GetCamera() { return m_Camera; }
     const OrthographicCamera& GetCamera() const { return m_Camera; }
     Bounds& GetBounds() { return m_Bounds; }
+
+    void SetZoomLevel(float level);
   private:
     bool OnMouseScrolled(MouseScrolledEvent& e);
     bool OnWindowResized(WindowResizeEvent& e);
+
+    void CalculateView();
   private:
     float m_AspectRatio;
     float m_ZoomLevel = 1.0f;

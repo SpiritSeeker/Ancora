@@ -49,24 +49,33 @@ namespace Ancora {
     dispatcher.Dispatch<WindowResizeEvent>(AE_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
   }
 
-  bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
+  void OrthographicCameraController::SetZoomLevel(float level)
   {
-    m_ZoomLevel -= e.GetYOffset() * 0.25f;
-    m_ZoomLevel = std::max(m_ZoomLevel, 0.1f);
+    m_ZoomLevel = level;
+    CalculateView();
+  }
+
+  void OrthographicCameraController::CalculateView()
+  {
     m_Bounds.Left = -m_AspectRatio * m_ZoomLevel;
     m_Bounds.Right = m_AspectRatio * m_ZoomLevel;
     m_Bounds.Top = m_ZoomLevel;
     m_Bounds.Bottom = -m_ZoomLevel;
     m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+  }
+
+  bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
+  {
+    m_ZoomLevel -= e.GetYOffset() * 0.25f;
+    m_ZoomLevel = std::max(m_ZoomLevel, 0.1f);
+    CalculateView();
     return false;
   }
 
   bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
   {
     m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-    m_Bounds.Left = -m_AspectRatio * m_ZoomLevel;
-    m_Bounds.Right = m_AspectRatio * m_ZoomLevel;
-    m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+    CalculateView();
     return false;
   }
 

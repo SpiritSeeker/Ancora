@@ -7,6 +7,45 @@
 
 #include <chrono>
 
+static const uint32_t s_MapWidth = 16;
+static const char* s_MapTiles =
+"WWWWWWWWWWWWWWWW"
+"WWWWWWDDDDWWWWWW"
+"WWWWWDDDDDDWWWWW"
+"WWWWDDDDDDDDWWWW"
+"WWWDDDDDDDDDWWWW"
+"WWWDDDDDDDDDDWWW"
+"WWDDWWWDDDDDDWWW"
+"WDDDWWWDDDDDDDWW"
+"WDDDWWWDDDDDDDWW"
+"WWDDDDDDDDDDDWWW"
+"WWWDDDDDDDDDDWWW"
+"WWWDDDDDDDDDWWWW"
+"WWWWDDDDDDDDWWWW"
+"WWWWWDDDDDDWWWWW"
+"WWWWWWDDDDWWWWWW"
+"WWWWWWWWWWWWWWWW"
+;
+
+static const char* s_MapTrees =
+"WWWWWWWWWWWWWWWW"
+"WWWWWWDDDDWWWWWW"
+"WWWWWDDDDDDWWWWW"
+"WWWWDDDDDDDDWWWW"
+"WWWDDDDDDDDDWWWW"
+"WWWDDDDDDDDDDWWW"
+"WWDDWWWDDDDDDWWW"
+"WDDDWWWDDDDDDDWW"
+"WDDDWWWDDDtDDDWW"
+"WWDDDDDDDBTDDWWW"
+"WWWDDDDDDDDDDWWW"
+"WWWDDDDDDDDDWWWW"
+"WWWWDDDDDDDDWWWW"
+"WWWWWDDDDDDWWWWW"
+"WWWWWWDDDDWWWWWW"
+"WWWWWWWWWWWWWWWW"
+;
+
 // Rework this mess.
 void GetProfileResults(Sandbox2D* sandbox2D, const char* name, float duration)
 {
@@ -61,8 +100,19 @@ void Sandbox2D::OnAttach()
 {
   m_Texture = Ancora::Texture2D::Create("Sandbox/assets/textures/pic.png");
   m_SpriteSheet = Ancora::Texture2D::Create("Sandbox/assets/game/textures/RPGpack_sheet_2X.png");
-  m_BushTexture = Ancora::SubTexture2D::CreateFromCoords(m_SpriteSheet, glm::vec2({ 2, 3 }), glm::vec2({ 128, 128 }));
+
+  m_MapWidth = s_MapWidth;
+  m_MapHeight = strlen(s_MapTiles) / s_MapWidth;
+
+  m_TextureMap['D'] = Ancora::SubTexture2D::CreateFromCoords(m_SpriteSheet, glm::vec2({ 1, 11 }), glm::vec2({ 128, 128 }));
+  m_TextureMap['W'] = Ancora::SubTexture2D::CreateFromCoords(m_SpriteSheet, glm::vec2({ 11, 11 }), glm::vec2({ 128, 128 }));
+  m_TextureMap['B'] = Ancora::SubTexture2D::CreateFromCoords(m_SpriteSheet, glm::vec2({ 2, 3 }), glm::vec2({ 128, 128 }));
+  m_TextureMap['t'] = Ancora::SubTexture2D::CreateFromCoords(m_SpriteSheet, glm::vec2({ 4, 2 }), glm::vec2({ 128, 128 }));
+  m_TextureMap['T'] = Ancora::SubTexture2D::CreateFromCoords(m_SpriteSheet, glm::vec2({ 4, 1 }), glm::vec2({ 128, 128 }));
+
   Ancora::Random::Init();
+
+  m_CameraController.SetZoomLevel(4.0f);
 }
 
 void Sandbox2D::OnDetach()
@@ -93,7 +143,26 @@ void Sandbox2D::OnUpdate(Ancora::Timestep ts)
   	Ancora::Renderer2D::BeginScene(m_CameraController.GetCamera());
     // Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 2.0f, 2.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
     // Ancora::Renderer2D::DrawRotatedQuad({ 1.0f, -0.5f }, glm::radians(30.0f), { 0.15f, 0.35f }, m_SquareColor);
-    Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_BushTexture);
+    // Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_BushTexture);
+
+    for (uint32_t y = 0; y < m_MapHeight; y++)
+    {
+      for (uint32_t x = 0; x < m_MapWidth; x++)
+      {
+        char tileType = s_MapTiles[x + y * m_MapWidth];
+        Ancora::Renderer2D::DrawQuad({ x - (m_MapWidth / 2.0f), (m_MapHeight / 2.0f) - y }, { 1.0f, 1.0f }, m_TextureMap[tileType]);
+      }
+    }
+
+    for (uint32_t y = 0; y < m_MapHeight; y++)
+    {
+      for (uint32_t x = 0; x < m_MapWidth; x++)
+      {
+        char tileType = s_MapTrees[x + y * m_MapWidth];
+        Ancora::Renderer2D::DrawQuad({ x - (m_MapWidth / 2.0f), (m_MapHeight / 2.0f) - y, 0.5f }, { 1.0f, 1.0f }, m_TextureMap[tileType]);
+      }
+    }
+
     Ancora::Renderer2D::EndScene();
   }
 }
