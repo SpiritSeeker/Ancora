@@ -26,5 +26,7 @@
 #include "Ancora/Renderer/Texture.h"
 #include "Ancora/Renderer/VertexArray.h"
 
+#include "Ancora/Renderer/SubTexture2D.h"
+
 #include "Ancora/Renderer/OrthographicCamera.h"
 // ----------------------------------------------

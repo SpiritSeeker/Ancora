@@ -21,6 +21,8 @@ private:
   Ancora::Ref<Ancora::Shader> m_Shader;
 
   Ancora::Ref<Ancora::Texture2D> m_Texture;
+  Ancora::Ref<Ancora::Texture2D> m_SpriteSheet;
+  Ancora::Ref<Ancora::SubTexture2D> m_BushTexture;
 
   int m_FPS;
   glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };

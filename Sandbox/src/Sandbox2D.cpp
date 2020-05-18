@@ -60,6 +60,8 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach()
 {
   m_Texture = Ancora::Texture2D::Create("Sandbox/assets/textures/pic.png");
+  m_SpriteSheet = Ancora::Texture2D::Create("Sandbox/assets/game/textures/RPGpack_sheet_2X.png");
+  m_BushTexture = Ancora::SubTexture2D::CreateFromCoords(m_SpriteSheet, glm::vec2({ 2, 3 }), glm::vec2({ 128, 128 }));
   Ancora::Random::Init();
 }
 
@@ -89,9 +91,9 @@ void Sandbox2D::OnUpdate(Ancora::Timestep ts)
   {
     PROFILE_SCOPE("Renderer Draw");
   	Ancora::Renderer2D::BeginScene(m_CameraController.GetCamera());
-    Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 2.0f, 2.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-    Ancora::Renderer2D::DrawRotatedQuad({ 1.0f, -0.5f }, glm::radians(30.0f), { 0.15f, 0.35f }, m_SquareColor);
-    Ancora::Renderer2D::DrawQuad({ 0.5f, 0.5f }, { 0.5f, 0.5f }, m_Texture, 2, m_SquareColor);
+    // Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 2.0f, 2.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+    // Ancora::Renderer2D::DrawRotatedQuad({ 1.0f, -0.5f }, glm::radians(30.0f), { 0.15f, 0.35f }, m_SquareColor);
+    Ancora::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_BushTexture);
     Ancora::Renderer2D::EndScene();
   }
 }
