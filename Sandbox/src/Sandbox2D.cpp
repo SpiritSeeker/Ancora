@@ -113,6 +113,11 @@ void Sandbox2D::OnAttach()
   Ancora::Random::Init();
 
   m_CameraController.SetZoomLevel(4.0f);
+
+  Ancora::FramebufferSpecification fbSpec;
+  fbSpec.Width = 1280;
+  fbSpec.Height = 720;
+  m_Framebuffer = Ancora::Framebuffer::Create(fbSpec);
 }
 
 void Sandbox2D::OnDetach()
@@ -134,6 +139,7 @@ void Sandbox2D::OnUpdate(Ancora::Timestep ts)
 	// Render
   {
     PROFILE_SCOPE("Renderer Prep");
+    m_Framebuffer->Bind();
     Ancora::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	  Ancora::RenderCommand::Clear();
   }
@@ -164,6 +170,7 @@ void Sandbox2D::OnUpdate(Ancora::Timestep ts)
     }
 
     Ancora::Renderer2D::EndScene();
+    m_Framebuffer->Unbind();
   }
 }
 
@@ -244,6 +251,10 @@ void Sandbox2D::OnImGuiRender()
     ImGui::Text(label, result.Time);
   }
   m_ProfileResults.clear();
+
+  uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+  ImGui::Image((void*)textureID, ImVec2{ 1080.0f, 720.0f });
+
   ImGui::End();
 
 	ImGui::End();

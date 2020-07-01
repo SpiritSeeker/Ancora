@@ -20,6 +20,8 @@ private:
   Ancora::Ref<Ancora::VertexArray> m_VertexArray;
   Ancora::Ref<Ancora::Shader> m_Shader;
 
+  Ancora::Ref<Ancora::Framebuffer> m_Framebuffer;
+
   Ancora::Ref<Ancora::Texture2D> m_Texture;
   Ancora::Ref<Ancora::Texture2D> m_SpriteSheet;
   Ancora::Ref<Ancora::SubTexture2D> m_BushTexture;

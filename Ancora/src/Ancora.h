@@ -23,6 +23,7 @@
 
 #include "Ancora/Renderer/Buffer.h"
 #include "Ancora/Renderer/Shader.h"
+#include "Ancora/Renderer/Framebuffer.h"
 #include "Ancora/Renderer/Texture.h"
 #include "Ancora/Renderer/VertexArray.h"
 
