@@ -23,6 +23,7 @@ namespace Ancora {
     Ref<Shader> m_Shader;
 
     Ref<Framebuffer> m_Framebuffer;
+    glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 
     Ref<Texture2D> m_Texture;
     Ref<Texture2D> m_SpriteSheet;
