@@ -214,3 +214,68 @@ project "Sandbox"
 		defines "AE_DIST"
 		runtime "Release"
 		optimize "on"
+
+project "Ancora-Editor"
+	location "Ancora-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Ancora/vendor/spdlog/include",
+		"Ancora/src",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.ImGui}"
+	}
+
+	links
+	{
+		"Ancora"
+	}
+
+	filter "system:linux or macosx"
+
+		defines
+		{
+			"AE_PLATFORM_LINUX",
+			"AE_BUILD_DLL"
+		}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		defines
+		{
+			"AE_PLATFORM_WINDOWS"
+		}
+
+
+	filter "configurations:Debug"
+		defines
+		{
+			"AE_DEBUG",
+			"AE_ENABLE_ASSERTS"
+		}
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "AE_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "AE_DIST"
+		runtime "Release"
+		optimize "on"
