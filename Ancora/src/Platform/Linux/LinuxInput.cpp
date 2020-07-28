@@ -1,28 +1,26 @@
 #include "aepch.h"
-#include "LinuxInput.h"
+#include "Ancora/Core/Input.h"
 
 #include "Ancora/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Ancora {
 
-	Input* Input::s_Instance = new LinuxInput();
-
-	bool LinuxInput::IsKeyPressedImpl(int keycode)
+	bool Input::IsKeyPressed(KeyCode keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto state = glfwGetKey(window, keycode);
+		auto state = glfwGetKey(window, static_cast<int32_t>(keycode));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool LinuxInput::IsMouseButtonPressedImpl(int button)
+	bool Input::IsMouseButtonPressed(MouseCode button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto state = glfwGetMouseButton(window, button);
+		auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> LinuxInput::GetMousePositionImpl()
+	std::pair<float, float> Input::GetMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xpos, ypos;
@@ -31,17 +29,16 @@ namespace Ancora {
 		return { (float)xpos, (float)ypos };
 	}
 
-	float LinuxInput::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
-		auto pos = GetMousePositionImpl();
+		auto pos = GetMousePosition();
 		return pos.first;
 	}
 
-	float LinuxInput::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
-		auto pos = GetMousePositionImpl();
+		auto pos = GetMousePosition();
 		return pos.second;
 	}
-
 
 }
